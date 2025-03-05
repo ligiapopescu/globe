@@ -41,7 +41,7 @@ import {
 import { DateTimeFormatter } from "./date-time-formatter";
 import { RegionalSettingsPerLocale } from "./windows-regional-formats";
 
-// @vitest-environment jsdom
+// @vitest-environment edge-runtime
 describe("Windows Regional Formats", () => {
   const supportedLocales = [
     "ar-sa",
