@@ -16,6 +16,18 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.25.9.tgz#24b64e2c3ec7cd3b3c547729b8d16871f22cbdc7"
   integrity sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==
 
+"@edge-runtime/primitives@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-6.0.0.tgz#7ca59111605d72b6789b55e6d9c264afb656a5b1"
+  integrity sha512-FqoxaBT+prPBHBwE1WXS1ocnu/VLTQyZ6NMUBAdbP7N2hsFTTxMC/jMu2D/8GAlMQfxeuppcPuCUk/HO3fpIvA==
+
+"@edge-runtime/vm@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/vm/-/vm-5.0.0.tgz#0db56607125248bb58d53470a4388c738e4f9bf4"
+  integrity sha512-NKBGBSIKUG584qrS1tyxVpX/AKJKQw5HgjYEnPLC0QsTw79JrGn+qUr8CXFb955Iy7GUdiiUv1rJ6JBGvaKb6w==
+  dependencies:
+    "@edge-runtime/primitives" "6.0.0"
+
 "@esbuild/aix-ppc64@0.25.0":
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.25.0.tgz#499600c5e1757a524990d5d92601f0ac3ce87f64"
