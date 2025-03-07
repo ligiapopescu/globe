@@ -56,8 +56,18 @@ export const intlToDateFns = {
   },
   // TODO: add 12/24 hour
   hour: {
-    numeric: "H",
-    "2-digit": "HH",
+    numeric: {
+      h12: "h",
+      h23: "H",
+      h24: "k",
+      h11: "K",
+    },
+    "2-digit": {
+      h12: "hh",
+      h23: "HH",
+      h24: "kk",
+      h11: "KK",
+    },
   },
   minute: {
     numeric: "m",
@@ -71,12 +81,8 @@ export const intlToDateFns = {
     short: "zzz",
     long: "zzzz",
   },
-  dayPeriod: {
-    hour12: "a",
-  },
-  dayperiod: {
-    hour12: "a",
-  },
+  dayPeriod: "a",
+  dayperiod: "a",
 };
 
 const windowsTime: ITranslationMap = {

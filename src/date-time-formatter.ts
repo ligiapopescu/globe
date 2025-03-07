@@ -56,7 +56,6 @@ export class DateTimeFormatter {
    * @param locale The desired locale to which to format the date and time value (default: en-US)
    */
   constructor(private locale: string | ILocaleInfo = "en-US") {
-    console.log("constructor");
     if (typeof this.locale === "string") {
       this.loadLocale(this.locale);
     } else {
@@ -66,16 +65,13 @@ export class DateTimeFormatter {
 
   private loadLocale(locale: string) {
     const fnsLocale = locale.toLocaleLowerCase().split("-")[0];
-    console.log(`fnsLocale: ${fnsLocale}`);
     if (fnsLocale === "en") {
       return;
     }
     try {
-      console.log(`Loading date-fns locale: ${fnsLocale}`);
       /* webpackMode: "lazy", webpackChunkName: "df-[index]", webpackExclude: /_lib/ */
       import(`date-fns/locale/${fnsLocale}`).then(locale => {
         this.dateFnsLocale = locale;
-        console.log("Successfully loaded date-fns locale", this.dateFnsLocale);
       });
     } catch (e) {
       this.dateFnsLocale = enUS;

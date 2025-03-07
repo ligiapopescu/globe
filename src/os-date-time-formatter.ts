@@ -68,6 +68,7 @@ const FORCE_0_FOR_MIDNIGHT: { [key: string]: boolean } = {
 };
 
 const QUOTE = "'";
+const DATE_FNS_ESCAPE = "'";
 const QUOTE_ESCAPED = "~";
 const DOUBLE_QUOTES_REGEX = /''/g;
 const ESCAPED_QUOTES_REGEX = new RegExp(QUOTE_ESCAPED, "g");
@@ -298,14 +299,18 @@ export class OsDateTimeFormatter {
     const partValues = this.getPartValues(format.intlOptions, date);
     let formatted = "";
     for (let i = 0; i < format.parts.length; i++) {
-      formatted = `${formatted}${this.getDateFnsValueValue(
+      const dateFnsToken = this.getDateFnsValueValue(
         format.parts[i],
         partValues,
         date,
         format.intlOptions
-      )}`;
+      );
+      formatted = `${formatted}${dateFnsToken}`;
     }
     formatted = formatted.replace(/\s+/g, " ").trim();
+    if (formatted === "") {
+      return "";
+    }
     const output = dateFnsFormatter(date, formatted, {
       locale: this.dateFnsLocale,
     });
@@ -319,14 +324,21 @@ export class OsDateTimeFormatter {
     intlOptions?: Intl.DateTimeFormatOptions
   ): string {
     if (typeof part === "string") {
+      if (part === QUOTE) {
+        return `${DATE_FNS_ESCAPE}${QUOTE}`;
+      }
       if (/[a-zA-Z]/.test(part)) {
-        return part.replace(/([a-zA-Z]+)/g, "'$1'");
+        return part.replace(
+          /([a-zA-Z]+)/g,
+          `${DATE_FNS_ESCAPE}$1${DATE_FNS_ESCAPE}`
+        );
       }
       return part;
     }
 
     const dateFnsPart = part.replacePart;
     let dateFnsType;
+
     if (Array.isArray(part.replacePart)) {
       for (let i = 0; i < part.replacePart.length; i++) {
         const partCandidate = part.replacePart[i];
@@ -336,18 +348,40 @@ export class OsDateTimeFormatter {
         }
       }
     } else {
-      dateFnsType = intlOptions ? intlOptions[part.replacePart] : undefined;
+      dateFnsType =
+        part.intlOptionsOverride?.[part.replacePart] ??
+        intlOptions?.[part.replacePart];
     }
-    const dateFnsToken = dateFnsType
-      ? intlToDateFns[dateFnsPart][dateFnsType]
-      : undefined;
+
+    let dateFnsToken = "";
+
+    if (dateFnsPart === "timeZoneName" && partValues.timeZoneName) {
+      return `${DATE_FNS_ESCAPE}${partValues.timeZoneName}${DATE_FNS_ESCAPE}`;
+    }
+    if (dateFnsPart === "hour") {
+      // check if is 12 or 24 hour format
+      dateFnsToken = dateFnsType
+        ? intlToDateFns[dateFnsPart][dateFnsType][intlOptions.hourCycle]
+        : undefined;
+    } else {
+      dateFnsToken = dateFnsType
+        ? intlToDateFns[dateFnsPart][dateFnsType]
+        : undefined;
+    }
+
     const values = part.intlOptionsOverride
       ? this.getPartValues(part.intlOptionsOverride, date)
       : partValues;
 
     let value = undefined;
 
-    if (Array.isArray(part.replacePart)) {
+    if (
+      Array.isArray(part.replacePart) &&
+      part.replacePart.includes("dayPeriod") &&
+      intlToDateFns["dayPeriod"]
+    ) {
+      value = intlToDateFns["dayPeriod"];
+    } else if (Array.isArray(part.replacePart)) {
       for (let i = 0; i < part.replacePart.length; i++) {
         const partCandidate = part.replacePart[i];
         const valueCandidate = values[partCandidate];
