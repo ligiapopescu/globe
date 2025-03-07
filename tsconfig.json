@@ -3,7 +3,7 @@
         "declaration": true,
         "noResolve": false,
         "module": "ES2022",
-        "target": "es5",
+        "target": "ES2022",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
